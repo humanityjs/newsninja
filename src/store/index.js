@@ -6,12 +6,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     headlines: [],
-    loaded: false
+    loading: true
   },
   mutations: {
     setHeadlines(state, headlines) {
       state.headlines = headlines,
-      state.loaded = true
+      state.loading = false
     }
   },
   getters: {

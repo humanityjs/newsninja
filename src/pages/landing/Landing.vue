@@ -3,9 +3,10 @@
     <div class="group">
       <NewsBar />
       <div class="articles">
-        <ArticleCard v-for="(article, index) in headlines" :key="index" :article="article" />
-        
+        <Loader v-if="loading" />
+        <ArticleCard v-else v-for="(article, index) in headlines" :key="index" :article="article" />
       </div>
+      <Pagination :count="3" @pageChanged="getNewPage" />
     </div>
     <div class="group">
       <NewsBar />
@@ -20,6 +21,8 @@
 import { mapState } from 'vuex'
 import ArticleCard from '@/components/cards/ArticleCard.vue'
 import NewsBar from '@/components/NewsBar.vue'
+import Pagination from '@/components/Pagination'
+import Loader from '@/components/Loader'
 import { getHeadlines } from '@/api/news'
 export default {
   data() {
@@ -30,17 +33,27 @@ export default {
   },
   components: {
     ArticleCard,
-    NewsBar
+    NewsBar,
+    Pagination,
+    Loader
   },
   async mounted() {
     getHeadlines()
   },
   computed: {
     headlines() {
-      if (this.$store.state.loaded) {
+      if (!this.$store.state.loading) {
         return this.$store.getters.getSeries(this.page, 'headlines')
       }
       return []
+    },
+    loading() {
+      return this.$store.state.loading
+    }
+  },
+  methods: {
+    getNewPage(value) {
+      this.page = value
     }
   }
 }
@@ -53,6 +66,7 @@ export default {
 
   .group {
     .articles {
+      min-height: 500px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
