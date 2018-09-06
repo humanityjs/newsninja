@@ -6,12 +6,28 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     headlines: [],
-    loading: true
+    loading: true,
+    sourceLoading: true,
+    business: [],
+    sports: [],
+    businessLoading: true,
+    sportsLoading: true
   },
   mutations: {
     setHeadlines(state, headlines) {
       state.headlines = headlines,
       state.loading = false
+    },
+    setSources(state, sources) {
+      state.sources = sources
+      state.sourceLoading = false
+    },
+    setLoading(state) {
+      state.loading = true
+    },
+    setcategory(state, headlines) {
+      state[headlines.category] = headlines.articles
+      state[`${headlines.category}Loading`] = false
     }
   },
   getters: {

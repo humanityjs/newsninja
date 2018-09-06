@@ -1,23 +1,48 @@
 <template>
   <div class="newsbar">
     <div class="page-title">
-      <h2>Top Headlines</h2>
+      <h2>{{title}}</h2>
     </div>
-    <div class="select-div">
+    <div  v-if="showSelect" class="select-div">
       <span>Select a news source</span>
-      <select class="selectpicker" data-size="7" data-style="btn btn-primary btn-round btn-block" title="Single Select">
-        <option disabled selected>Single Option</option>
-        <option value="2">Foobar</option>
-        <option value="3">Is great</option>
+      <select @change="changeSource" v-model="source" class="selectpicker" data-style="btn btn-primary btn-round btn-block" title="Sources">
+        <option selected>All Sources</option>
+        <option v-for="(source, index) in sources" :key="index" :value="source.id">{{source.name}}</option>
       </select>
     </div>
   </div>
 </template>
 
 <script>
+import { getHeadlines } from '@/api/news'
 export default {
   mounted() {
     $('.selectpicker').selectpicker('refresh');
+  },
+  props: ['showSelect', 'title'],
+  data() {
+    return {
+      source: ''
+    }
+  },
+  computed: {
+    sources() {
+      if (!this.$store.state.sourceLoading) {
+        return this.$store.state.sources
+      }
+    }
+  },
+  watch: {
+    sources() {
+      setTimeout(() => {
+        $('.selectpicker').selectpicker('refresh');
+      }, 500)
+    }
+  },
+  methods: {
+    changeSource() {
+      getHeadlines(this.source)
+    }
   }
 }
 </script>

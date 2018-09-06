@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  props: ['count'],
+  props: ['count', 'name'],
   data() {
     return {
       currentPage: 1
@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     onPageChange(value) {
-      this.$emit('pageChanged', value)
+      this.$emit('pageChanged', { name: this.name, value})
       this.currentPage = value
     }
   }
